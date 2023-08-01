@@ -19,18 +19,6 @@ resource "aws_instance" "dev" {
   vpc_security_group_ids = ["${aws_security_group.acesso-ssh.id}"]
 }
 
-resource "aws_instance" "dev4" {
-  ami           = var.amis["us-east-1"]
-  instance_type = var.instance_type
-  key_name      = var.key_name
-  tags = {
-    Name = "dev4"
-  }
-
-  vpc_security_group_ids = ["${aws_security_group.acesso-ssh.id}"]
-  depends_on = [aws_s3_bucket.bucket-dev4]
-}
-
 resource "aws_instance" "dev5" {
   ami           = var.amis["us-east-1"]
   instance_type = var.instance_type
@@ -67,29 +55,6 @@ resource "aws_instance" "dev7" {
   }
 
   vpc_security_group_ids = ["${aws_security_group.acesso-ssh-us-east-2.id}"]
-}
-
-
-resource "aws_s3_bucket" "bucket-dev4" {
-  bucket = "phlabs-dev4"
-
-  tags = {
-    Name        = "labs-dev4"
-  }
-}
-
-resource "aws_s3_bucket_ownership_controls" "dev4" {
-  bucket = aws_s3_bucket.bucket-dev4.id
-  rule {
-    object_ownership = "BucketOwnerPreferred"
-  }
-}
-
-resource "aws_s3_bucket_acl" "dev4" {
-  depends_on = [aws_s3_bucket_ownership_controls.dev4]
-
-  bucket = aws_s3_bucket.bucket-dev4.id
-  acl    = "private"
 }
 
 resource "aws_dynamodb_table" "dynamodb-hml" {
