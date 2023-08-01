@@ -95,3 +95,25 @@ resource "aws_dynamodb_table" "dynamodb-hml" {
   }
 
 }
+
+resource "aws_s3_bucket" "bucket-homolog" {
+  bucket = "phlabs-homolog"
+
+  tags = {
+    Name        = "labs-homolog"
+  }
+}
+
+resource "aws_s3_bucket_ownership_controls" "homolog" {
+  bucket = aws_s3_bucket.bucket-homolog.id
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
+resource "aws_s3_bucket_acl" "homolog" {
+  depends_on = [aws_s3_bucket_ownership_controls.homolog]
+
+  bucket = aws_s3_bucket.bucket-homolog.id
+  acl    = "private"
+}
