@@ -8,21 +8,21 @@ provider "aws" {
 }
 
 resource "aws_instance" "dev" {
-  count = 3
-  ami           = "ami-0f34c5ae932e6f0e4"
-  instance_type = "t2.micro"
-  key_name = "terraform-aws"
+  count         = 3
+  ami           = var.amis["us-east-1"]
+  instance_type = var.instance_type
+  key_name      = var.key_name
   tags = {
-    Name = "dev-${count.index}"
+    Name = "dev${count.index}"
   }
 
   vpc_security_group_ids = ["${aws_security_group.acesso-ssh.id}"]
 }
 
 resource "aws_instance" "dev4" {
-  ami           = "ami-0f34c5ae932e6f0e4"
-  instance_type = "t2.micro"
-  key_name = "terraform-aws"
+  ami           = var.amis["us-east-1"]
+  instance_type = var.instance_type
+  key_name      = var.key_name
   tags = {
     Name = "dev4"
   }
@@ -32,9 +32,9 @@ resource "aws_instance" "dev4" {
 }
 
 resource "aws_instance" "dev5" {
-  ami           = "ami-0f34c5ae932e6f0e4"
-  instance_type = "t2.micro"
-  key_name = "terraform-aws"
+  ami           = var.amis["us-east-1"]
+  instance_type = var.instance_type
+  key_name      = var.key_name
   tags = {
     Name = "dev5"
   }
@@ -44,10 +44,10 @@ resource "aws_instance" "dev5" {
 
 resource "aws_instance" "dev6" {
   # aws+nome_do_alias
-  provider = aws.us-east-2
-  ami           = "ami-02a89066c48741345"
-  instance_type = "t2.micro"
-  key_name = "terraform-aws"
+  provider      = aws.us-east-2
+  ami           = var.amis["us-east-2"]
+  instance_type = var.instance_type
+  key_name      = var.key_name
   tags = {
     Name = "dev6"
   }
@@ -55,6 +55,20 @@ resource "aws_instance" "dev6" {
   vpc_security_group_ids = ["${aws_security_group.acesso-ssh-us-east-2.id}"]
   depends_on = [aws_dynamodb_table.dynamodb-hml]
 }
+
+resource "aws_instance" "dev7" {
+  # aws+nome_do_alias
+  provider      = aws.us-east-2
+  ami           = var.amis["us-east-2"]
+  instance_type = var.instance_type
+  key_name      = var.key_name
+  tags = {
+    Name = "dev7"
+  }
+
+  vpc_security_group_ids = ["${aws_security_group.acesso-ssh-us-east-2.id}"]
+}
+
 
 resource "aws_s3_bucket" "bucket-dev4" {
   bucket = "phlabs-dev4"
