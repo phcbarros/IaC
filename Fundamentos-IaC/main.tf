@@ -19,7 +19,7 @@ resource "aws_instance" "app_server" {
   # user_data_replace_on_change = true
 
   tags = {
-    Name = "Teste AWS"
+    Name = "Terraform Ansible Python"
   }
 }
 
