@@ -26,3 +26,12 @@ resource "aws_instance" "app_server" {
 output "app_server_ip" {
   value = aws_instance.app_server.public_ip
 }
+
+resource "aws_key_pair" "chaveSSH" {
+  key_name    = "iac-dev"
+  public_key  = file("iac-dev.pub")
+
+  tags = {
+    Alura = "iac-dev"
+  }
+}
