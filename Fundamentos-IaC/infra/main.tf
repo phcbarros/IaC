@@ -8,13 +8,13 @@ terraform {
 }
 
 provider "aws" {
-  region  = "us-east-1"
+  region  = var.regiao_aws
 }
 
 resource "aws_instance" "app_server" {
-  ami           = "ami-053b0d53c279acc90"
-  instance_type = "t2.micro"
-  key_name      = "iac-alura"
+  ami           = var.ami
+  instance_type = var.instancia
+  key_name      = var.chave
   # user_data     = "${file("init.sh")}"
   # user_data_replace_on_change = true
 
@@ -28,10 +28,10 @@ output "app_server_ip" {
 }
 
 resource "aws_key_pair" "chaveSSH" {
-  key_name    = "iac-dev"
-  public_key  = file("iac-dev.pub")
+  key_name    = var.chave
+  public_key  = file("${var.chave}.pub")
 
   tags = {
-    Alura = "iac-dev"
+    Alura = "curso-iac"
   }
 }
