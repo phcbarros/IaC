@@ -27,11 +27,15 @@ output "app_server_ip" {
   value = aws_instance.app_server.public_ip
 }
 
-resource "aws_key_pair" "chaveSSH" {
+resource "aws_key_pair" "chave_ssh" {
   key_name    = var.chave
   public_key  = file("${var.chave}.pub")
 
   tags = {
     Alura = "curso-iac"
   }
+}
+
+output "ip_publico" {
+  value = aws_instance.app_server.public_ip
 }

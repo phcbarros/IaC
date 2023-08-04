@@ -5,3 +5,7 @@ module "aws-prd" {
   chave = "iac-prd"
   ami = "ami-024e6efaf93d85776"
 }
+
+output "ip" {
+  value = module.aws-prd.ip_publico
+}
