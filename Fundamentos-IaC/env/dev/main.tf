@@ -4,6 +4,7 @@ module "aws-dev" {
   regiao_aws  = "us-east-1"
   chave       = "iac-dev"
   ami         = "ami-053b0d53c279acc90"
+  grupo_de_seguranca = "grupo_de_seguranca_dev"
 }
 
 output "ip" {

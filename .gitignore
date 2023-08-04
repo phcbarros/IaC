@@ -41,3 +41,5 @@ terraform.rc
 
 *.pem
 **/*.pub
+**/iac-dev
+**/iac-prd
