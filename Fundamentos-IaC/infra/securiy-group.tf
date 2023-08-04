@@ -1,6 +1,6 @@
 resource "aws_security_group" "acesso_geral" {
   name        = var.grupo_de_seguranca
-  description = "Grupo de Segurança"
+  description = "Grupo de Seguranca"
   #vpc_id      = aws_vpc.main.id
 
   # protocolos, portas e ips permitidos

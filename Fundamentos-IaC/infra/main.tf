@@ -21,6 +21,8 @@ resource "aws_instance" "app_server" {
   tags = {
     Name = "Terraform Ansible Python"
   }
+
+  vpc_security_group_ids = ["${aws_security_group.acesso_geral.id}"]
 }
 
 output "app_server_ip" {

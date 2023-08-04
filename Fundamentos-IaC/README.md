@@ -32,3 +32,19 @@ vim settings.py
 
 # ALLOWED_HOSTS = ['*']
 ```
+
+## Ansible
+
+Comando para executar o playbook
+
+```shell
+
+# gerar SSH
+ssh-keygen -f iac-prd -t rsa
+
+# dev
+ansible-playbook env/dev/playbook.yml -u ubuntu --private-key env/dev/iac-dev -i infra/hosts.yml 
+
+# prod
+ansible-playbook env/prd/playbook.yml -u ubuntu --private-key env/prd/iac-prd -i infra/hosts.yml 
+```
