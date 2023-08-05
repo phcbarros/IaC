@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_launch_template" "maquina" {
-  imageimage_id = var.ami
+  image_id = var.ami
   instance_type = var.instancia
   key_name      = var.chave
   # user_data     = "${file("init.sh")}"
@@ -23,11 +23,8 @@ resource "aws_launch_template" "maquina" {
   }
 
   security_group_names = [var.grupo_de_seguranca]
+  user_data = filebase64("ansible.sh")
 }
-
-# output "app_server_ip" {
-#   value = aws_instance.app_server.public_ip
-# }
 
 resource "aws_key_pair" "chave_ssh" {
   key_name    = var.chave
@@ -38,6 +35,18 @@ resource "aws_key_pair" "chave_ssh" {
   }
 }
 
-output "ip_publico" {
-  value = aws_instance.app_server.public_ip
+# output "ip_publico" {
+#   value = aws_instance.app_server.public_ip
+# }
+
+resource "aws_autoscaling_group" "grupo_autoescala" {
+  availability_zones = ["${var.regiao_aws}a"]
+  name      = var.grupo_autoescala.nome
+  max_size  = var.grupo_autoescala.maximo
+  min_size  = var.grupo_autoescala.minimo
+
+  launch_template {
+    id = aws_launch_template.maquina.id
+    version = "Latest"
+  }
 }

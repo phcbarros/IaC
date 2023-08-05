@@ -4,9 +4,14 @@ module "aws-prd" {
   regiao_aws  = "us-east-1"
   chave       = "iac-prd"
   ami         = "ami-053b0d53c279acc90"
-  grupo_de_seguranca = "produção"
+  grupo_de_seguranca = "producao"
+  grupo_autoescala = {
+    nome = "ga-producao"
+    minimo = 1
+    maximo = 10
+  }
 }
 
-output "ip" {
-  value = module.aws-prd.ip_publico
-}
+# output "ip" {
+#   value = module.aws-prd.ip_publico
+# }
