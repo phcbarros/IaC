@@ -11,8 +11,8 @@ provider "aws" {
   region  = var.regiao_aws
 }
 
-resource "aws_instance" "app_server" {
-  ami           = var.ami
+resource "aws_launch_template" "maquina" {
+  imageimage_id = var.ami
   instance_type = var.instancia
   key_name      = var.chave
   # user_data     = "${file("init.sh")}"
@@ -22,12 +22,12 @@ resource "aws_instance" "app_server" {
     Name = "Terraform Ansible Python"
   }
 
-  vpc_security_group_ids = ["${aws_security_group.acesso_geral.id}"]
+  security_group_names = [var.grupo_de_seguranca]
 }
 
-output "app_server_ip" {
-  value = aws_instance.app_server.public_ip
-}
+# output "app_server_ip" {
+#   value = aws_instance.app_server.public_ip
+# }
 
 resource "aws_key_pair" "chave_ssh" {
   key_name    = var.chave
