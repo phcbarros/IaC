@@ -47,7 +47,7 @@ resource "aws_autoscaling_group" "grupo_autoescala" {
 
   launch_template {
     id = aws_launch_template.maquina.id
-    version = "Latest"
+    version = "$Latest"
   }
 
   target_group_arns = [ aws_lb_target_group.loadbalancer_target_group.arn ]
@@ -65,6 +65,7 @@ resource "aws_lb" "loadbalancer" {
   name               = "load-balancer"
   internal           = false
   subnets            = ["${aws_default_subnet.subnet_1.id}", "${aws_default_subnet.subnet_2.id}"]
+  security_groups = [ aws_security_group.acesso_geral.id ]
 }
 
 resource "aws_lb_target_group" "loadbalancer_target_group" {
@@ -85,4 +86,16 @@ resource "aws_lb_listener" "loadbalancer_listener" {
 }
 resource "aws_default_vpc" "default" {
   
+}
+
+resource "aws_autoscaling_policy" "escala-producao" {
+  name                    = "terraform-scaling-policy"
+  autoscaling_group_name  = var.grupo_autoescala.nome
+  policy_type             = "TargetTrackingScaling"
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+    target_value = 50.0
+  }
 }
