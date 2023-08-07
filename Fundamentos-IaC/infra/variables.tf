@@ -25,3 +25,7 @@ variable "grupo_autoescala" {
     minimo = number
   })
 }
+
+variable "producao" {
+  type = bool
+}

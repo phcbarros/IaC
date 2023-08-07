@@ -23,7 +23,7 @@ resource "aws_launch_template" "maquina" {
   }
 
   security_group_names = [var.grupo_de_seguranca]
-  user_data = filebase64("ansible.sh")
+  user_data = var.producao ? filebase64("ansible.sh") : ""
 }
 
 resource "aws_key_pair" "chave_ssh" {
@@ -44,13 +44,13 @@ resource "aws_autoscaling_group" "grupo_autoescala" {
   name      = var.grupo_autoescala.nome
   max_size  = var.grupo_autoescala.maximo
   min_size  = var.grupo_autoescala.minimo
+  target_group_arns = var.producao ? [ aws_lb_target_group.loadbalancer_target_group[0].arn] : []
 
   launch_template {
     id = aws_launch_template.maquina.id
     version = "$Latest"
   }
 
-  target_group_arns = [ aws_lb_target_group.loadbalancer_target_group.arn ]
 }
 
 resource "aws_default_subnet" "subnet_1" {
@@ -66,6 +66,7 @@ resource "aws_lb" "loadbalancer" {
   internal           = false
   subnets            = ["${aws_default_subnet.subnet_1.id}", "${aws_default_subnet.subnet_2.id}"]
   security_groups = [ aws_security_group.acesso_geral.id ]
+  count = var.producao ? 1 : 0
 }
 
 resource "aws_lb_target_group" "loadbalancer_target_group" {
@@ -73,19 +74,20 @@ resource "aws_lb_target_group" "loadbalancer_target_group" {
   port      = "8000"
   protocol  = "HTTP"
   vpc_id    = aws_default_vpc.default.id
+  count = var.producao ? 1 : 0
 }
 
 resource "aws_lb_listener" "loadbalancer_listener" {
-  load_balancer_arn = aws_lb.loadbalancer.arn
+  load_balancer_arn = aws_lb.loadbalancer[0].arn
   port              = "8000"
   protocol          = "HTTP"
+  count = var.producao ? 1 : 0
   default_action {
     type = "forward"
-    target_group_arn = aws_lb_target_group.loadbalancer_target_group.arn
+    target_group_arn = aws_lb_target_group.loadbalancer_target_group[0].arn
   }
 }
 resource "aws_default_vpc" "default" {
-  
 }
 
 resource "aws_autoscaling_policy" "escala-producao" {
@@ -98,4 +100,5 @@ resource "aws_autoscaling_policy" "escala-producao" {
     }
     target_value = 50.0
   }
+  count = var.producao ? 1 : 0
 }

@@ -10,6 +10,7 @@ module "aws-prd" {
     minimo = 1
     maximo = 10
   }
+  producao = true
 }
 
 # output "ip" {

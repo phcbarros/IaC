@@ -10,6 +10,7 @@ module "aws-dev" {
     minimo = 0
     maximo = 1
   }
+  producao = false
 }
 
 # output "ip" {
