@@ -7,3 +7,9 @@ variable "db" {
     password = "senhadowordpress"
   }
 }
+
+variable "tag" {
+  type = string
+
+  default = "labs-wordpress"  
+}

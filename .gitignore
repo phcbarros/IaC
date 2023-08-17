@@ -43,3 +43,5 @@ terraform.rc
 **/*.pub
 **/iac-dev
 **/iac-prd
+**/terraform-aws
+**/labs-wordpress

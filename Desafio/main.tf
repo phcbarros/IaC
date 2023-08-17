@@ -12,6 +12,11 @@ resource "aws_db_instance" "wordpress" {
   password             = var.db["password"]
   parameter_group_name = "default.mysql8.0.33"
   port                 =  3306
+  count = 0
+
+  tags = {
+    Name = var.tag
+  }
 }
 
 resource "aws_security_group" "acesso-ssh2" {
@@ -35,7 +40,7 @@ resource "aws_security_group" "acesso-ssh2" {
   }
 
   tags = {
-    ENV = "labs"
+    ENV = var.tag
   }
 }
 
@@ -61,6 +66,26 @@ resource "aws_security_group" "acesso-web2" {
   }
 
   tags = {
-    ENV = "labs"
+    ENV = var.tag
+  }
+}
+
+resource "aws_default_vpc" "default" {
+}
+
+resource "aws_key_pair" "acesso-ssh" {
+  key_name = "labs-wordpress"
+  public_key = file("labs-wordpress.pub") # criar chave
+}
+
+resource "aws_instance" "web" {
+  ami           = "ami-08a52ddb321b32a8c"
+  instance_type = "t2.micro"
+  vpc_security_group_ids = ["${aws_default_vpc.default.id}", "${aws_security_group.acesso-ssh2.id}", "${aws_security_group.acesso-web2.id}"] # como associar o grupo default?
+  key_name = aws_key_pair.acesso-ssh.key_name
+  user_data = filebase64("amazon-apache.sh")
+
+  tags = {
+    Name = var.tag
   }
 }
