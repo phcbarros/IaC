@@ -11,8 +11,8 @@ resource "aws_db_instance" "wordpress" {
   username             = var.db["username"]
   password             = var.db["password"]
   parameter_group_name = "default.mysql8.0.33"
-  port                 =  3306
-  count = 0
+  port                 = 3306
+  count                = 0
 
   tags = {
     Name = var.tag
@@ -20,15 +20,15 @@ resource "aws_db_instance" "wordpress" {
 }
 
 resource "aws_security_group" "acesso-ssh2" {
-  name = "acesso-ssh2"
+  name        = "acesso-ssh2"
   description = "Acesso SSH 2"
 
   ingress {
-    description      = "Acesso SSH 2"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "TCP"
-    cidr_blocks      = ["200.158.31.77/32"]
+    description = "Acesso SSH 2"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "TCP"
+    cidr_blocks = ["200.158.31.77/32"]
   }
 
   egress {
@@ -45,7 +45,7 @@ resource "aws_security_group" "acesso-ssh2" {
 }
 
 resource "aws_security_group" "acesso-web2" {
-  name = "acesso-web2"
+  name        = "acesso-web2"
   description = "Acesso WEB"
 
   ingress {
@@ -74,16 +74,16 @@ resource "aws_default_vpc" "default" {
 }
 
 resource "aws_key_pair" "acesso-ssh" {
-  key_name = "labs-wordpress"
-  public_key = file("labs-wordpress.pub") # criar chave
+  key_name   = var.key-pair-name
+  public_key = file("${var.key-pair-name}.pub")
 }
 
-resource "aws_instance" "web" {
-  ami           = "ami-08a52ddb321b32a8c"
-  instance_type = "t2.micro"
-  vpc_security_group_ids = ["${aws_default_vpc.default.id}", "${aws_security_group.acesso-ssh2.id}", "${aws_security_group.acesso-web2.id}"] # como associar o grupo default?
-  key_name = aws_key_pair.acesso-ssh.key_name
-  user_data = filebase64("amazon-apache.sh")
+resource "aws_instance" "site-wordpress" {
+  ami             = "ami-08a52ddb321b32a8c"
+  instance_type   = "t2.micro"
+  key_name        = aws_key_pair.acesso-ssh.key_name
+  user_data       = filebase64("amazon-apache.sh")
+  security_groups = [aws_security_group.acesso-ssh2.name, aws_security_group.acesso-web2.name]
 
   tags = {
     Name = var.tag

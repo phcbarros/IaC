@@ -1,8 +1,8 @@
 variable "db" {
-  type = map
+  type = map(any)
 
   default = {
-    db_name = "wordpress"
+    db_name  = "wordpress"
     username = "admin"
     password = "senhadowordpress"
   }
@@ -11,5 +11,11 @@ variable "db" {
 variable "tag" {
   type = string
 
-  default = "labs-wordpress"  
+  default = "labs-wordpress"
+}
+
+variable "key-pair-name" {
+  type = string
+
+  default = "labs-wordpress"
 }
