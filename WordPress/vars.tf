@@ -19,3 +19,9 @@ variable "key-pair-name" {
 
   default = "labs-wordpress"
 }
+
+variable "security_group_id" {
+  type = string
+
+  default = "sg-0ae8496c3f25b6756"
+}
